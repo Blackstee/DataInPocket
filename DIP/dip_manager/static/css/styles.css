@@ -1,0 +1,146 @@
+.bg-login_{
+
+    background-image: url("https://wallpaperscraft.ru/image/ssha_nyu_jork_vid_sverkhu_neboskreby_112139_1920x1080.jpg");
+
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+.bg-login__{
+background: url('https://wallpaperscraft.ru/image/zakat_oblaka_zdaniya_neboskreby_tayvan_taybey_gorod_puteshestviya_58366_1920x1080.jpg') no-repeat center center scroll;
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  }
+
+.bg-register__{
+background: url('https://wallpaperscraft.ru/image/ssha_nyu_jork_vid_sverkhu_neboskreby_112139_1920x1080.jpg') no-repeat center center scroll;
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  }
+
+
+.text_descr{
+    font-size: .8rem;
+    border-radius: 1rem;
+    padding: 1rem 1rem;
+
+}
+
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
+
+body{background:#fffff;}
+
+.comment{
+  padding:5px;
+  margin:20px auto 0 auto;
+}
+
+.comment-content{
+  float:left;
+  margin:0 0 0 40px;
+}
+
+.comment-content > span{
+  line-height:150%;
+  color:#444;
+  background:#f5f5f5;
+  display:block;
+  width:100%;
+  padding:10px 15px 10px 15px;
+  font-size:.9em;
+  display:block;
+  position:relative;
+  border-radius:3px;
+  box-shadow:
+    1px 1px 3px rgba(0,0,0,.3);}
+
+.comment-content > span:before{
+  content:'';
+  position:absolute;
+  top:28px;
+  left:-28px;
+  display:block;
+  width:0;
+  height:0;
+  border:1em solid #f5f5f5;
+  border-color:transparent #f5f5f5 transparent transparent;
+}
+
+.comment p{
+  font-family:'Open Sans';
+  text-shadow:1px 1px 2px #fff;
+}
+
+.comment strong{font-weight:700;}
+.comment .author{font-weight:300;font-size:.8em}
+
+.comment img{
+  float:left;
+  max-width:5rem;
+  border-radius:3rem;
+  box-shadow:
+    0 0 0 1px #3B3B45,
+    0 0 0 3px #F1BF5E,
+    0 0 0 5px #F1BF5E,
+    0 0 2px #3B3B45;
+  margin:20px 0 0 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.custom-input-file {
+    overflow: hidden;
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: #eee url('https://s3.amazonaws.com/uifaces/faces/twitter/walterstephanie/128.jpg');
+    background-size: 120px;
+    border-radius: 120px;
+}
+input[type="file"]{
+    z-index: 999;
+    line-height: 0;
+    font-size: 0;
+    position: absolute;
+    opacity: 0;
+    filter: alpha(opacity = 0);-ms-filter: "alpha(opacity=0)";
+    margin: 0;
+    padding:0;
+    left:0;
+}
+.uploadPhoto {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    display: none;
+    width: 50%;
+    height: 50%;
+    color: #fff;
+    text-align: center;
+    line-height: 60px;
+    text-transform: uppercase;
+    background-color: rgba(0,0,0,.3);
+    border-radius: 50px;
+    cursor: pointer;
+}
+.custom-input-file:hover .uploadPhoto { display: block; }
