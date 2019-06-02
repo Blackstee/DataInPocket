@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
      <!-- Begin Page Content -->
@@ -6,26 +7,59 @@
 
             <div class="row">
 
-            <!-- Area Chart -->
-            <div class="col-xl-12 col-lg-7">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header bg-gray-900 py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-warning ">{{ task.task_name }}</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Actions:</div>
-                      <a class="dropdown-item" href="/update">Change</a>
-                      <a class="dropdown-item" data-toggle="modal"  data-target="#deleteModal">Delete</a>
+            <div class="col-xl-12 col-md-6 mb-4">
+              <div class="card bg-gray-100 task_block_danger shadow h-100 py-2">
+                  <div class="task_box"></div>
+                  <div class="right_icon_edit"><i class="fas fa-lg fa-fw fa-edit text-gray-900" style="margin-top:25%;"></i></div>
+                    <div class="right_icon_delete"><i data-toggle="modal"  data-target="#deleteModal" class="fas fa-lg fa-fw fa-trash-alt text-gray-900" style="margin-top:25%;"></i></div>
+
+                  <div class="card-body ">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+
+                        <h6 class="text-md font-weight-bold text-gray-900 ">{{ task.creator.username }} -> {{ task.doer.username }}<span class="float-right">Date start: {{ task.date_start }}</span></h6>
+                         <h6 class="text-md  font-weight-bold text-gray-900">
+                      Followers: {% for follower in task.followers.all %}
+                                {{ follower.username }},
+                                {% endfor %}<span class="float-right">Finish: {{ task.date_end }}</span></h6>
+                        <hr>
+                        <h4 class="text-xl font-weight-bold text-warning text-uppercase mb-1">{{ task.task_name }}</h4>
+
+                        <div class="h5 mb-0 font-weight text-gray-800">{{task.description}}</div>
+                        <hr>
+
+
+                        <div class="row">
+
+                            <div class="column">
+                             <div class = "img-magnifier-container">
+                                 <img class="myImg"  src="https://www.careerfaqs.com.au/wp-content/uploads/2018/10/How-to-become-a-Builder_612px.jpg" style="width:100%">
+                             </div>
+                         </div>
+
+                            {% for pic_task in pics_task%}
+                        <div class="column">
+                             <div class = "img-magnifier-container">
+                                 <img class="myImg"  id="myimage" src="{{ pic_task.picture.url}}" style="width:100%">
+                                 </div>
+                         </div>
+                         {% endfor %}
+
+                             <div class="column ">
+                                 <form action="add_task_pic" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                                 <input type="file" id="id_image"  name="image" accept="image/*" capture style="display:none"/>
+                                        <img src="{% static 'img/add_img.png' %}" id="upfile1" style="cursor:pointer" />
+                                     <input type="hidden" name="task" value="{{task.id}}">
+                                    <input type="submit" value="Submit" />
+
+                                    </form>
+                                 </div>
+                        </div>
+
+
                     </div>
                   </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    {{ task.description}}
                 </div>
               </div>
             </div>
@@ -42,9 +76,44 @@
 
 
 
+            <div class="row">
+
+                <!-- Area Chart -->
+            <div class="col-xl-12 col-lg-7">
+              <div class="card shadow mb-4">
+
+                <!-- Card Body -->
+                <div class="card-body">
+
+                    <div class="row comment">
+                        <div class = "col-lg-2 center-block">
+                            <img src="http://farm5.staticflickr.com/4012/5126739463_e5598d33fb.jpg">
+                        </div>
+                        <div class = "col-lg-10">
+                             <form class="user" action = "" method="post" enctype="multipart/form-data">
+
+                                     {% csrf_token %}
+                                     <div class="form-group " >
+                                        <textarea name = "text" id = "text"  rows="3" class="form-control text_descr" placeholder="Write your comment..."></textarea>
+                                    </div>
+                                 <div class="form-group">
+                                        <div class="field" align="left" id="files-upload" >
+                                             <input id="id_image_comm"  name="image_comm" accept="image/*" type="file"   name="files[]" multiple />
+                                        </div>
+                                 </div>
+                                    <input type="hidden" name="task" value="{{task.id}}">
 
 
+                                <button type="submit" class="btn btn-warning btn-user btn-block">Send</button>
 
+                             </form>
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
 
 
@@ -57,34 +126,40 @@
                 <div class="card-header bg-gray-100 py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-warning ">Comments</h6>
 
-
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Actions:</div>
-                      <a class="dropdown-item" href="/update">Change</a>
-                      <a class="dropdown-item" data-toggle="modal"  data-target="#deleteModal">Delete</a>
-                    </div>
-                  </div>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body comment">
+
+                    {% for comment in comments %}
+
                     <div class="row">
 
                         <div class="col-xl-2 col-lg-2 text-center" >
                         <img src="http://farm5.staticflickr.com/4012/5126739463_e5598d33fb.jpg">
                             </div>
                         <div class="col-xl-9 col-lg-9">
-                            <div class="comment-content"><p class="author"><strong>Jack the Ripper</strong> - 10 minutes ago</p>
+                            <div class="comment-content"><p class="author"><strong>{{comment.creator.username}}</strong>{{comment.date_post}}</p>
                             <span>
-                                 Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
-                             </span>
+                                {{comment.text}}
+
+                            </span>
                             </div>
+                            {% for pic_com in pics_comm %}
+
+
+                                {% if pic_com.comment.id ==  comment.id %}
+                                    <img src="{{pic_com.picture.url}}"/>
+
+                                {% endif %}
+                            {% endfor %}
+
                         </div>
                         <div class="col-xl-1 col-lg-2"><br></div>
                     </div>
+                    <hr>
+
+
+                    {% endfor %}
                 </div>
               </div>
             </div>
@@ -101,7 +176,7 @@
 
 
   <!-- Delete Modal-->
-  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal fade" style="z-index:100000000000;" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -118,6 +193,215 @@
       </div>
     </div>
   </div>
+
+
+
+<div id="myModal" class="modal">
+  <span class="close_button">&times;</span>
+    <div class = "modal-content">
+        <div class="img-magnifier-glass" id="hereiam"></div>
+        <img id="img01" style="width:100%;max-width:120rem;">
+    </div>
+
+  <div id="caption"></div>
+</div>
+
+
+<script>
+
+
+
+    // Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var img = document.getElementsByClassName("myImg")[0];
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+img.onclick = function(){
+  modal.style.display = "block";
+  modalImg.src = this.src;
+  captionText.innerHTML = this.alt;
+  /* Execute the magnify function: */
+magnify("img01", 3);
+/* Specify the id of the image, and the strength of the magnifier glass: */
+}
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close_button")[0];
+
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+
+
+
+function magnify(imgID, zoom) {
+  var img, glass, w, h, bw;
+  img = document.getElementById(imgID);
+
+  /* Create magnifier glass: */
+  /*glass = document.createElement("DIV");*/
+  /*glass.setAttribute("class", "img-magnifier-glass");*/
+
+  /* Insert magnifier glass: */
+  /*img.parentElement.insertBefore(glass, img);*/
+
+  glass = document.getElementById ("hereiam");
+
+  /* Set background properties for the magnifier glass: */
+  glass.style.backgroundImage = "url('" + img.src + "')";
+  glass.style.backgroundRepeat = "no-repeat";
+  glass.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
+  bw = 3;
+  w = glass.offsetWidth / 2;
+  h = glass.offsetHeight / 2;
+
+  /* Execute a function when someone moves the magnifier glass over the image: */
+  glass.addEventListener("mousemove", moveMagnifier);
+  img.addEventListener("mousemove", moveMagnifier);
+
+  /*and also for touch screens:*/
+  glass.addEventListener("touchmove", moveMagnifier);
+  img.addEventListener("touchmove", moveMagnifier);
+  function moveMagnifier(e) {
+    var pos, x, y;
+    /* Prevent any other actions that may occur when moving over the image */
+    e.preventDefault();
+    /* Get the cursor's x and y positions: */
+    pos = getCursorPos(e);
+    x = pos.x;
+    y = pos.y;
+    /* Prevent the magnifier glass from being positioned outside the image: */
+    if (x > img.width - (w / zoom)) {x = img.width - (w / zoom);}
+    if (x < w / zoom) {x = w / zoom;}
+    if (y > img.height - (h / zoom)) {y = img.height - (h / zoom);}
+    if (y < h / zoom) {y = h / zoom;}
+    /* Set the position of the magnifier glass: */
+    glass.style.left = (x - w) + "px";
+    glass.style.top = (y - h) + "px";
+    /* Display what the magnifier glass "sees": */
+    glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
+  }
+
+  function getCursorPos(e) {
+    var a, x = 0, y = 0;
+    e = e || window.event;
+    /* Get the x and y positions of the image: */
+    a = img.getBoundingClientRect();
+    /* Calculate the cursor's x and y coordinates, relative to the image: */
+    x = e.pageX - a.left;
+    y = e.pageY - a.top;
+    /* Consider any page scrolling: */
+    x = x - window.pageXOffset;
+    y = y - window.pageYOffset;
+    return {x : x, y : y};
+  }
+}
+
+
+
+
+
+
+
+$(document).ready(function(e) {
+        $(".showonhover").click(function(){
+			$("#selectfile").trigger('click');
+		});
+    });
+
+
+var input = document.querySelector('input[type=file]'); // see Example 4
+
+input.onchange = function () {
+  var file = input.files[0];
+
+  drawOnCanvas(file);   // see Example 6
+  displayAsImage(file); // see Example 7
+};
+
+function drawOnCanvas(file) {
+  var reader = new FileReader();
+
+  reader.onload = function (e) {
+    var dataURL = e.target.result,
+        c = document.querySelector('canvas'), // see Example 4
+        ctx = c.getContext('2d'),
+        img = new Image();
+
+    img.onload = function() {
+      c.width = img.width;
+      c.height = img.height;
+      ctx.drawImage(img, 0, 0);
+    };
+
+    img.src = dataURL;
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function displayAsImage(file) {
+  var imgURL = URL.createObjectURL(file),
+      img = document.createElement('img');
+
+  img.onload = function() {
+    URL.revokeObjectURL(imgURL);
+  };
+
+  img.src = imgURL;
+  document.body.appendChild(img);
+}
+
+$("#upfile1").click(function () {
+    $("#id_image").trigger('click');
+});
+$("#upfile2").click(function () {
+    $("#file2").trigger('click');
+});
+$("#upfile3").click(function () {
+    $("#file3").trigger('click');
+});
+
+
+$(document).ready(function() {
+  if (window.File && window.FileList && window.FileReader) {
+    $("#files-upload").on("change", function(e) {
+      var files = e.target.files,
+        filesLength = files.length;
+      for (var i = 0; i < filesLength; i++) {
+        var f = files[i]
+        var fileReader = new FileReader();
+        fileReader.onload = (function(e) {
+          var file = e.target;
+          $("<span class=\"pip\">" +
+            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+            "<br/><span class=\"remove\">Remove image</span>" +
+            "</span>").insertAfter("#files");
+          $(".remove").click(function(){
+            $(this).parent(".pip").remove();
+          });
+
+          // Old code here
+          /*$("<img></img>", {
+            class: "imageThumb",
+            src: e.target.result,
+            title: file.name + " | Click to remove"
+          }).insertAfter("#files-upload").click(function(){$(this).remove();});*/
+
+        });
+        fileReader.readAsDataURL(f);
+      }
+    });
+  } else {
+    alert("Your browser doesn't support to File API")
+  }
+});
+</script>
+
 
 
 

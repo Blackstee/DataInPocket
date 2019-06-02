@@ -1,6 +1,6 @@
 from django.db import models
-import datetime
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 
 class ProjectManager(models.Manager):
@@ -41,18 +41,6 @@ class Project(models.Model):
     objects = ProjectManager()
 
 
-class TaskManager(models.Manager):
-
-
-    def create_task(self, task_name, description, date_start, date_end,
-                    date_update, updated,  creator, doer,
-                    project):
-
-        task = self.create(task_name=task_name, description = description, date_start=date_start,
-                              date_end=date_end, date_update=date_update, updated=updated,creator=creator,
-                              doer=doer,project=project)
-
-        return task
 
 
 
@@ -62,11 +50,11 @@ class Task(models.Model):
 
     description = models.TextField(max_length=10000, blank=True, null=True)
 
-    date_start = models.DateTimeField(default=datetime.datetime.utcnow, null=True)
+    date_start = models.DateTimeField(auto_now_add=True, null=True)
 
     date_end = models.DateTimeField(blank=False, null=True)
 
-    date_update = models.DateTimeField(default=datetime.datetime.utcnow, null=True)
+    date_update = models.DateTimeField(auto_now_add=True, null=True)
 
     updated = models.IntegerField(blank=True, default=0, null=True)
 
@@ -78,18 +66,27 @@ class Task(models.Model):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
-    objects = TaskManager()
+
+
+class CommentManager(models.Manager):
+
+
+    def create_comment(self, text, creator, task):
+
+        comment = self.create(text=text, author=creator, task=task)
+
+        return comment
 
 
 class Comment(models.Model):
 
     text = models.TextField(max_length=1000, blank=False, null=True)
 
-    сreator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="creator_of_comment")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="creator_of_comment")
 
-    date_post = models.DateTimeField(default=datetime.datetime.utcnow, null=True)
+    date_post = models.DateTimeField(auto_now_add=True, null=True)
 
-    date_update = models.DateTimeField(default=datetime.datetime.utcnow, null=True)
+    date_update = models.DateTimeField(auto_now_add=True, null=True)
 
     updated = models.IntegerField(blank=True, default=0, null=True)
 
@@ -97,12 +94,14 @@ class Comment(models.Model):
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="related_task")
 
+    objects = CommentManager()
+
 
 
 class Suggestion(models.Model):
 
 
-    date_post = models.DateTimeField(default=datetime.datetime.utcnow, null=True)
+    date_post = models.DateTimeField(auto_now_add=True, null=True)
 
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="creator_of_suggestion")
 
@@ -114,7 +113,7 @@ class Suggestion(models.Model):
 
 class Change (models.Model):
 
-    date_post = models.DateTimeField(default=datetime.datetime.utcnow, null=True)
+    date_post = models.DateTimeField(auto_now_add=True, null=True)
 
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="creator_of_change")
 
@@ -129,6 +128,8 @@ class Change (models.Model):
 
 class Pic_comm (models.Model):
 
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="task_of_comm_of_pic")
+
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
 
     picture = models.ImageField(upload_to = 'pic_folder/comments/', default = 'pic_folder/None/no-img.jpg')
@@ -137,7 +138,7 @@ class Pic_comm (models.Model):
 
 class Pic_Task(models.Model):
 
-    comment = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
     picture = models.ImageField(upload_to='pic_folder/tasks/', default='pic_folder/None/no-img.jpg')
 

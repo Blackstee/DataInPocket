@@ -7,6 +7,12 @@
         <!-- Begin Page Content -->
         <div class="container-fluid bg-light">
 
+
+<button onclick="myFunction()">Show Snackbar</button>
+
+<div id="snackbar">Delete completed successfully <i class="fas fa-check-circle text-success"></i></div>
+
+
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h4 mb-0 text-gray-800">Current tasks</h1>
@@ -184,6 +190,14 @@
       </div>
     </div>
   </div>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+</script>
 
 
 {% endblock %}
