@@ -124,7 +124,7 @@ body{background:#fffff;}
 
 
 input[type="file"]{
-    z-index: 999;
+    /*z-index: 999;
     /*line-height: 0;
     font-size: 0;
     position: absolute;
@@ -423,6 +423,35 @@ input[type="file"] {
     text-align: center;
     top:80px;
     background-color: #f8f9fc;
+
+}
+
+
+
+
+.right_icon_edit_comment{
+    position:absolute;
+    width:30px;
+    border-radius:2rem;
+    height:30px;
+    right:0;
+    margin-right:-50px;
+    text-align: center;
+    top:0.1rem;
+    background-color:  #3A3B45;
+
+}
+
+.right_icon_delete_comment{
+    position:absolute;
+    width:30px;
+    border-radius:2rem;
+    height:30px;
+    right:0;
+    margin-right:-50px;
+    text-align: center;
+    top:3rem;
+    background-color:  #3A3B45;
 
 }
 

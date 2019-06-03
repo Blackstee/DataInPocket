@@ -5,6 +5,12 @@ from dip_manager.models import Project, User, Task, Comment, Pic_Task, Pic_comm
 import pandas as pd
 from dip_manager.forms import ImageUploadForm, ImageUploadForm_comm
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+import pytz
+from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+
+
 
 @login_required
 def generate_report_users(request):
@@ -105,6 +111,28 @@ def task_delete(request, id):
 
     return HttpResponseRedirect(reverse('home'))
 
+
+@login_required
+@csrf_exempt
+def task_update(request, id):
+    if (request.POST.get('finish_date')[-5:] == " a.m."):
+        date_finish = request.POST.get('finish_date')[:-5]+"AM"
+    else:
+        date_finish = request.POST.get('finish_date')[:-5] + "PM"
+    Task.objects.filter(id=id).update(task_name = request.POST.get('name'),
+                                                 description =request.POST.get('description'),
+                                                 date_end = datetime.strptime(date_finish[8:],'%b %d, %Y, %I:%M%p'),
+                                                 date_update = timezone.now(), updated = 1)
+
+    return HttpResponseRedirect(reverse('home'))
+
+
+@login_required
+def comment_delete(request, task_id, comment_id):
+
+    comment = get_object_or_404(Comment, pk=comment_id).delete()
+
+    return HttpResponseRedirect(reverse('task_detail', kwargs={'id': task_id}))
 
 
 @login_required

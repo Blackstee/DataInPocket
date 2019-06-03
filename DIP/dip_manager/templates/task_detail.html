@@ -5,27 +5,35 @@
      <!-- Begin Page Content -->
         <div class="container-fluid bg-light">
 
+
+                <div id="snackbar">Delete completed successfully <i class="fas fa-check-circle text-success"></i></div>
+
             <div class="row">
 
             <div class="col-xl-12 col-md-6 mb-4">
               <div class="card bg-gray-100 task_block_danger shadow h-100 py-2">
                   <div class="task_box"></div>
-                  <div class="right_icon_edit"><i class="fas fa-lg fa-fw fa-edit text-gray-900" style="margin-top:25%;"></i></div>
-                    <div class="right_icon_delete"><i data-toggle="modal"  data-target="#deleteModal" class="fas fa-lg fa-fw fa-trash-alt text-gray-900" style="margin-top:25%;"></i></div>
+                  <div class="right_icon_edit" ><i id="edit_mode_task" onclick = "edit_task_mode_click({{task.id}})" class="fas fa-md fa-fw fa-edit text-gray-900" style="margin-top:25%;"></i></div>
+                    <div class="right_icon_delete"><i data-toggle="modal"  data-target="#deleteModal_task" class="fas fa-md fa-fw fa-trash-alt text-gray-900" style="margin-top:25%;"></i></div>
 
                   <div class="card-body ">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
 
-                        <h6 class="text-md font-weight-bold text-gray-900 ">{{ task.creator.username }} -> {{ task.doer.username }}<span class="float-right">Date start: {{ task.date_start }}</span></h6>
+                        <h6 class="text-md font-weight-bold text-gray-900 ">{{ task.creator.username }} -> {{ task.doer.username }}<span class="float-right">Start: {{ task.date_start }}</span></h6>
                          <h6 class="text-md  font-weight-bold text-gray-900">
                       Followers: {% for follower in task.followers.all %}
                                 {{ follower.username }},
-                                {% endfor %}<span class="float-right">Finish: {{ task.date_end }}</span></h6>
+                                {% endfor %}<span class="float-right" id = "task_date">Finish: {{ task.date_end }}</span></h6>
+                        {% if task.updated == 1%}
+                            <span class="float-right text-xs  font-weight-bold text-gray-900" >Last updated: {{ task.date_update }}</span>
+                             {% endif %}
+                        <br>
                         <hr>
-                        <h4 class="text-xl font-weight-bold text-warning text-uppercase mb-1">{{ task.task_name }}</h4>
+                        <h4 class="text-xl font-weight-bold text-warning text-uppercase mb-1" id = "task_name">{{ task.task_name }}
 
-                        <div class="h5 mb-0 font-weight text-gray-800">{{task.description}}</div>
+                        </h4>
+                        <div class="h5 mb-0 font-weight text-gray-800" id = "task_desc" contenteditable="false">{{task.description}}</div>
                         <hr>
 
 
@@ -138,11 +146,17 @@
                         <img src="http://farm5.staticflickr.com/4012/5126739463_e5598d33fb.jpg">
                             </div>
                         <div class="col-xl-9 col-lg-9">
-                            <div class="comment-content"><p class="author"><strong>{{comment.creator.username}}</strong>{{comment.date_post}}</p>
-                            <span>
+                            <div class="comment-content"><p class="author"><strong>{{comment.author.username}} </strong>{{comment.date_post}}</p>
+                            <span id="{{comment.id}}">
                                 {{comment.text}}
 
                             </span>
+
+                                {% if user.id == comment.author.id %}
+                                <div class="right_icon_edit_comment" onclick = "edit_comment_mode_click({{task.id}}, {{comment.id}})" ><i class="fas fa-sm fa-fw fa-edit text-gray-100" style="margin-top:25%;"></i></div>
+                                <a style="z-index:100000000000;" href="{% url 'comment_delete' task_id=task.id comment_id=comment.id  %}" class="right_icon_delete_comment"><i class="fas fa-sm fa-fw fa-trash-alt text-gray-100" style="margin-top:25%;"></i></a>
+
+                                {% endif %}
                             </div>
                             {% for pic_com in pics_comm %}
 
@@ -175,17 +189,17 @@
       <!-- End of Main Content -->
 
 
-  <!-- Delete Modal-->
-  <div class="modal fade" style="z-index:100000000000;" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <!-- Delete Modal TASK-->
+  <div class="modal fade" style="z-index:100000000000;" id="deleteModal_task" tabindex="-1" role="dialog" aria-labelledby="deleteModalTaskLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Sure?</h5>
+          <h5 class="modal-title" id="deleteModalTaskLabel">Sure?</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body">Select "Delete" below if you are sure you want to delete task {{ task.task_name }}</div>
+        <div class="modal-body">Select "Delete" below if you are sure you want to delete task<br> "{{ task.task_name }}"</div>
         <div class="modal-footer">
 
           <a class="btn btn-danger btn-user btn-block" href="{% url 'task_delete' task.id %}">Delete</a>
@@ -193,7 +207,6 @@
       </div>
     </div>
   </div>
-
 
 
 <div id="myModal" class="modal">
@@ -206,7 +219,7 @@
   <div id="caption"></div>
 </div>
 
-
+<script src="{% static 'js/task.js' %}"></script>
 <script>
 
 
