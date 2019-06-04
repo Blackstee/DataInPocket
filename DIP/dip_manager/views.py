@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
-from dip_manager.models import Project, User, Task, Comment, Pic_Task, Pic_comm
+from dip_manager.models import Project, User, Task, Comment, Pic_Task, Pic_comm, Suggestion
 import pandas as pd
 from dip_manager.forms import ImageUploadForm, ImageUploadForm_comm
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,7 @@ from django.utils import timezone
 import pytz
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+from django.http import JsonResponse
 
 
 
@@ -124,7 +125,7 @@ def task_update(request, id):
                                                  date_end = datetime.strptime(date_finish[8:],'%b %d, %Y, %I:%M%p'),
                                                  date_update = timezone.now(), updated = 1)
 
-    return HttpResponseRedirect(reverse('home'))
+    return JsonResponse({'status': 'success'})
 
 
 @login_required
@@ -133,6 +134,18 @@ def comment_delete(request, task_id, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id).delete()
 
     return HttpResponseRedirect(reverse('task_detail', kwargs={'id': task_id}))
+
+
+
+@login_required
+@csrf_exempt
+def comment_update(request, task_id, comment_id):
+
+    Comment.objects.filter(id = comment_id).update(text = request.POST.get('text'),
+                                                   date_update = timezone.now(),
+                                                   updated=1 )
+
+    return JsonResponse({'status': 'success'})
 
 
 @login_required
@@ -160,6 +173,17 @@ def proj_delete(request, id):
     project = get_object_or_404(Project, pk=id).delete()
 
     return HttpResponseRedirect(reverse('projects'))
+
+
+@login_required
+@csrf_exempt
+def project_update(request, id):
+
+    Project.objects.filter(id = id).update(project_name = request.POST.get('project_name'),
+                                        description=request.POST.get('description') )
+
+    return JsonResponse({'status': 'success'})
+
 
 
 
@@ -190,3 +214,43 @@ def user_delete(request, id):
     user = get_object_or_404(User, pk=id).delete()
 
     return HttpResponseRedirect(reverse('users'))
+
+
+@login_required
+@csrf_exempt
+def user_update(request, id):
+
+    User.objects.filter(id = id).update(first_name = request.POST.get('first_name'),
+                                        last_name=request.POST.get('last_name'),
+                                        username=request.POST.get('username'),
+                                        user_position = request.POST.get('position') )
+
+    return JsonResponse({'status': 'success'})
+
+
+
+@login_required
+def suggest(request):
+
+
+    if request.method == 'POST':
+
+        suggestion = Suggestion (creator =  request.user, date_post = timezone.now(),
+                                 text = request.POST.get('text_sugg'))
+        suggestion.save()
+        suggestion.followers.add(request.user)
+        suggestion.save()
+        print (suggestion.followers)
+
+
+
+    return render(request, 'suggest.html', {})
+
+
+
+@login_required
+def suggestions(request):
+
+    return render(request, 'suggestions.html', {"suggestions": Suggestion.objects.all()})
+
+

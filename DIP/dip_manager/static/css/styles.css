@@ -438,7 +438,7 @@ input[type="file"] {
     margin-right:-50px;
     text-align: center;
     top:0.1rem;
-    background-color:  #3A3B45;
+    background-color: white;
 
 }
 
@@ -450,11 +450,28 @@ input[type="file"] {
     right:0;
     margin-right:-50px;
     text-align: center;
-    top:3rem;
+    top:0.1rem;
     background-color:  #3A3B45;
 
 }
 
+
+.my_edit{
+    position:absolute;
+    left:-1%;
+    top:45%;
+}
+
+
+.my_edit_user{
+    position:absolute;
+    right:4rem;
+}
+
+.my_delete_user{
+    position:absolute;
+    right:1rem;
+}
 
 
 

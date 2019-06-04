@@ -146,14 +146,20 @@
                         <img src="http://farm5.staticflickr.com/4012/5126739463_e5598d33fb.jpg">
                             </div>
                         <div class="col-xl-9 col-lg-9">
-                            <div class="comment-content"><p class="author"><strong>{{comment.author.username}} </strong>{{comment.date_post}}</p>
-                            <span id="{{comment.id}}">
+                            <div class="comment-content"><p class="author" id = "{{comment.id}}"><strong>{{comment.author.username}} </strong>{{comment.date_post}}
+
+                                {% if comment.updated == 1%}
+                            <strong class=" text-xs  font-weight-bold text-gray-900" >Last updated: {{ comment.date_update }}</strong>
+                             {% endif %}
+
+                            </p>
+                            <span contenteditable=true id = "{{task.id}}{{comment.id}}" oninput = "appear_button_save({{task.id}}, {{comment.id}})">
                                 {{comment.text}}
 
                             </span>
 
                                 {% if user.id == comment.author.id %}
-                                <div class="right_icon_edit_comment" onclick = "edit_comment_mode_click({{task.id}}, {{comment.id}})" ><i class="fas fa-sm fa-fw fa-edit text-gray-100" style="margin-top:25%;"></i></div>
+
                                 <a style="z-index:100000000000;" href="{% url 'comment_delete' task_id=task.id comment_id=comment.id  %}" class="right_icon_delete_comment"><i class="fas fa-sm fa-fw fa-trash-alt text-gray-100" style="margin-top:25%;"></i></a>
 
                                 {% endif %}
@@ -413,6 +419,14 @@ $(document).ready(function() {
     alert("Your browser doesn't support to File API")
   }
 });
+
+
+
+
+
+
+
+
 </script>
 
 

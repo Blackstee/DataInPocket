@@ -1,7 +1,35 @@
-
 var mode_task_on = 0;
-var mode_comment_on = 0;
-var editing_comment_id = 0;
+
+function appear_button_save(task_id, comment_id){
+
+    if($('#comment_change'+comment_id).length <= 0){
+        var br_ = document.createElement("br");
+        var icon = document.createElement("i");
+
+        icon.className = "my_edit fas fa-2x fa-paper-plane text-warning";
+
+        icon.id = "comment_change"+comment_id;
+        //onclick function does not work
+        icon.onclick = function(){
+        post_update_comment(task_id, comment_id);
+        }
+
+
+        var comment = document.getElementById(comment_id);
+
+        comment.appendChild (br_);
+        comment.appendChild (icon);
+
+        var icn = document.getElementById("comment_change" +comment_id);
+
+
+    }
+
+}
+
+
+
+
 
 //on and off edit mode
 function edit_task_mode_click (task_id){
@@ -38,14 +66,9 @@ function edit_task_mode_click (task_id){
 
 }
 
-edit_comment_mode_click (task_id, comment_id){
-
-    if (mode_comment_on == 0 && editing_comment_id == 0){
-
-    }
 
 
-}
+
 
 //changes approval bar downside
 function approve_appear(text) {
@@ -70,7 +93,6 @@ function approve_appear(text) {
 //sends updates of task to server
 function post_update_task ( name, description, finish_date, task_id ){
 
-    alert (task_id);
     $.ajax({
         url: "/task/update/"+task_id+"/",
         method:"POST",
@@ -88,3 +110,27 @@ function post_update_task ( name, description, finish_date, task_id ){
 
 
 }
+
+
+
+//sends updates of comment to server
+function post_update_comment ( task_id, comment_id ){
+
+    var text = document.getElementById(task_id.toString()+comment_id.toString()).innerHTML;
+
+    $.ajax({
+        url: "/task/"+task_id+"/comment/update/"+comment_id+"/",
+        method:"POST",
+        data: {
+          'text': text
+        },
+        dataType: 'json',
+        success: function (data) {
+          approve_appear("Changes of comment saved ");
+        }
+      });
+
+
+
+}
+
