@@ -5,26 +5,34 @@
         <div class="container-fluid bg-light">
 
           <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h4 mb-0 text-gray-800">Current projects</h1>
+            <div class="row">
+        <div class="col-xl-12 col-lg-7">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
 
-            <a data-toggle="modal" class="btn btn-outline-warning btn-lg" data-target="#newProjectModal" >
-                    <span class="text" >Create new project</span>
 
+
+                <a  class="h4 mb-0 text-gray-800">Current projects
                   </a>
+                <a data-toggle="modal" class="btn btn-success btn-md text-white" data-target="#newProjectModal" >
+                    <i class="fas fa-plus fa-sm text-gray-100"> </i> New project
+                  </a>
+
+
              </div>
+        </div>
+
 
 
           <!-- Content Row -->
              {% for pr in projects %}
             <div class="col-xl-12 col-md-6 mb-4">
-              <div class="card bg-gray-900 border-left-warning shadow h-100 py-2">
+              <div class="card bg-gray-100 border-left-warning shadow h-100 py-2">
                 <div class="card-body ">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xl font-weight-bold text-warning text-uppercase mb-1"><a href="{% url 'proj_detail' pr.id %}" style="color:#ffbb33;">{{ pr.project_name }}</a></div>
 
-                        <div class="text-md mb-0 font-weight-bold text-gray-200">{{ pr.description}}</div>
+                        <div class="text-md mb-0 font-weight text-gray-800">{{ pr.description}}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-kaaba fa-2x text-warning"></i>

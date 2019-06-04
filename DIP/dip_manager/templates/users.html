@@ -5,37 +5,78 @@
         <div class="container-fluid bg-light">
 
           <!-- Page Heading -->
+
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h4 mb-0 text-gray-800">Users</h1>
 
-            <a data-toggle="modal" class="btn btn-outline-warning btn-lg" data-target="#newProjectModal" >
-                    <span class="text" >Create new user</span>
+            <a data-toggle="modal" class="btn btn-success btn-md shadow-sm text-gray-100" data-target="#newProjectModal" >
+                    <i class="fas fa-plus fa-sm text-gray-100"> </i> New user
 
-                  </a>
+            </a>
+
+              <a class="d-none d-sm-inline-block btn btn-md btn-info shadow-sm text-gray-100" href = "/dependencies" >
+                    <i class="fas fa-lock fa-sm text-gray-100"> </i> Dependencies tree
+
+            </a>
+             <a data-toggle="modal" class="d-none d-sm-inline-block btn btn-md btn-danger shadow-sm text-gray-100" data-target="#newProjectModal" >
+                    <i class="fas fa-download fa-sm text-gray-100"> </i> Report
+
+            </a>
+
              </div>
 
 
-          <!-- Content Row -->
-             {% for us in users %}
-            <div class="col-xl-12 col-md-6 mb-4">
-              <div class="card bg-gray-900 border-left-warning shadow h-100 py-2">
-                <div class="card-body ">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xl font-weight-bold text-warning text-uppercase mb-1"><a href="{% url 'user_detail' us.id %}">{{ us.username }}</a></div>
+            <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-gray-900">Users table</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table text-gray-700 table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Full name</th>
+                      <th>Position</th>
+                      <th>Type of user</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Username</th>
+                      <th>Full name</th>
+                      <th>Position</th>
+                      <th>Type of user</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  {% for user in users %}
 
-                        <br><div class="h5 mb-0 font-weight-bold text-gray-100">{{ us.first_name}}</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-user fa-2x text-warning"></i>
-                    </div>
-                  </div>
-                </div>
+                    <tr>
+                      <td>{{ user.username }}</td>
+                      <td>{{ user.first_name}} {{user.last_name}}</td>
+                      <td>{{ user.user_position}}</td>
+                      <td>
+                          {% if user.user_type == 0%}
+                          Usual user
+                          {% else %}
+                          {% if user.user_type == 1%}
+                          Manager
+                          {% else %}
+                          {% if user.user_type == 2%}
+                          Top-manager
+                          {% else %}
+                          Admin
+                          {% endif %}
+                          {% endif %}
+                          {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
               </div>
             </div>
-
-
-             {% endfor %}
+          </div>
 
 
 
@@ -53,7 +94,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="newProjectModalLabel">Create new project</h5>
+          <h5 class="modal-title" id="newProjectModalLabel">Create new user</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>

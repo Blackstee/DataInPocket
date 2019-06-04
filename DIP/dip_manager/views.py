@@ -14,6 +14,11 @@ from django.http import JsonResponse
 
 
 @login_required
+def dependencies (request):
+    return render(request, 'dependencies.html', {})
+
+
+@login_required
 def generate_report_users(request):
 
     users = []
@@ -24,6 +29,33 @@ def generate_report_users(request):
     users_df = pd.DataFrame(users, index = indexes,columns = ['username', 'first name', 'last name', 'password'])
     users_df.to_excel("users.xlsx", sheet_name = 'Users')
     return render(request, '404.html', {})
+
+
+@login_required
+@csrf_exempt
+def report_suggest(request):
+    if request.method == 'POST':
+
+        print ("I do work")
+        if (request.POST.get('creator')== "all"):
+            suggestions = Suggestion.objects.filter(created_at__range=(request.POST.get('date_start'), request.POST.get('date_end')))
+        else:
+            suggestions = Suggestion.objects.filter(
+                date_post__range=(request.POST.get('date_start'), request.POST.get('date_end')),
+                creator = get_object_or_404(User, pk=request.POST.get('creator')))
+
+        suggs = []
+        indexes=[]
+
+        for i in suggestions:
+            suggs.append([i.creator.username, i.text, i.date_post])
+            indexes.append(len(suggs))
+        suggs_df = pd.DataFrame(suggs, index=indexes, columns=['username', 'text', 'date posted'])
+        suggs_df.to_excel("suggestions_report.xlsx", sheet_name='Suggestions')
+
+        return JsonResponse({})
+
+
 
 
 @login_required
