@@ -6,14 +6,17 @@
         <!-- Begin Page Content -->
         <div class="container-fluid bg-light">
 
-           <div id="snackbar">Your suggestion was accepted!  <i class="fas fa-check-circle text-success"></i></div>
 
+           <div id="snackbar">Your suggestion was accepted!  <i class="fas fa-check-circle text-success"></i></div>
 
            <!-- Suggestion Text -->
           <div class="text-center">
             <br><br>
+              {% if bar == 1 %}
+              <p class="text-gray-500 mb-0">Your suggestion accepted! <i class="fas fa-check-circle text-success"></i></p>
+              {% endif %}
             <button type="button" class="btn btn-outline-info btn-lg" data-toggle="modal"  data-target="#newSuggestModal">Add new suggestion</button><br><br>
-            <button type="button" class="btn btn-outline-warning btn-lg">Review suggestions</button><br><br>
+            <a href="/logs_prop"><button type="button" class="btn btn-outline-warning btn-lg" >Review suggestions</button> </a><br><br>
             <p class="text-gray-500 mb-0">You have the ability to mention other users in suggestion</p>
             <a href="/tasks">&larr; Back to current tasks</a><br><br>
 
@@ -32,18 +35,18 @@
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
-        </div> <form class="user" action = "suggest" method="post">
+        </div> <form class="user" id="formoid" action = '/suggest/' method="POST" >
         <div class="modal-body">
 
                     {% csrf_token %}
                     <div class="form-group">
-                        <textarea name = "text_sugg" id = "text_sugg"  rows="3" class="form-control text_descr" placeholder="Enter your suggestion here..."></textarea>
+                        <textarea name = "text_sugg" id = "text_sugg"  rows="3" required class="form-control text_descr" placeholder="Enter your suggestion here..."></textarea>
                     </div>
 
 
         </div>
         <div class="modal-footer">
-           <button type="submit" onclick="approve_appear('Your suggestion was accepted!  ')" class="btn btn-success btn-user btn-block">Send suggestion</button>
+           <button  type="submit" class="btn btn-success btn-user btn-block">Send suggestion</button>
         </div>
            </form>
       </div>
@@ -52,6 +55,18 @@
 
 
 <script>
+
+    $("#formoid").submit(function(event) {
+      event.preventDefault();
+      var $form = $( this ),
+          url = $form.attr( 'action' );
+      var posting = $.post( url, { text_sugg: $('#text_sugg').val() } );
+      posting.done(function( data ) {
+        approve_appear("Your suggestion accepted! ");
+        $('#newSuggestModal').modal('hide');
+      });
+    });
+
 
 
 function approve_appear(text) {
@@ -70,7 +85,6 @@ function approve_appear(text) {
 
   setTimeout(function(){ approve.className = approve.className.replace("show", ""); }, 3000);
 
-}
 }
 </script>
 

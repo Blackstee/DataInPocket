@@ -230,9 +230,10 @@ def user_update(request, id):
 
 
 @login_required
+@csrf_exempt
 def suggest(request):
 
-
+    bar_approve=0
     if request.method == 'POST':
 
         suggestion = Suggestion (creator =  request.user, date_post = timezone.now(),
@@ -241,10 +242,9 @@ def suggest(request):
         suggestion.followers.add(request.user)
         suggestion.save()
         print (suggestion.followers)
+        bar_approve = 1
 
-
-
-    return render(request, 'suggest.html', {})
+    return render(request, 'suggest.html', {"bar": bar_approve})
 
 
 
